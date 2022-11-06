@@ -1,5 +1,5 @@
 ;#############################################
-;# 				  SYMBOLS					 #
+;# 		 SYMBOLS		     #
 ;#############################################
 
 	org			$00000000
@@ -12,8 +12,6 @@
 	
 ; Metadata
 ;------------  
-
-; 000100
 
 Metadata:
 	dc.b		"SEGA MEGA DRIVE "
@@ -42,7 +40,7 @@ VDP_CTRL	equ $FFC00004
 ;			VRAM
 VRAM_WRITE	equ %0001
 VRAM_READ	equ %0000
-CRAM_WRITE  equ %0011
+CRAM_WRITE  	equ %0011
 CRAM_READ	equ %1000
 VSRAM_WRITE	equ %0101
 VSRAM_READ	equ %0100
@@ -53,7 +51,7 @@ VBLANKON	equ 3
 VERSION_REG equ $00A10001
 TMSS_REG	equ	$00A14000
 
-RAM			equ $00FF0000
+RAM		equ $00FF0000
 
 ; RAM_68K_A	equ $00FF0000
 ; RAM_68K_B	equ $00FF0000+1
@@ -74,23 +72,23 @@ FRONT		equ 0
 BACK		equ 1
 
 ;#############################################
-;#				  VARIABLES					 #
+;#		VARIABLES		     #
 ;#############################################
 
 	RSSET RAM
-; SPRITES			rs.w 1
+; SPRITES		rs.w 1
 DMASOURCE:		rs.w 3
 DMAlength:		rs.w 2
 
 	rsset	$FF0020
 
-;	letters y coordinates
+;	characters' y-coordinates
 H1:				rs.b	1
 E1:				rs.b	1
 L1:				rs.b	1
 L2:				rs.b	1
 O1:				rs.b	1
-COMMA1:			rs.b	1
+COMMA1:				rs.b	1
 B1:				rs.b	1
 R1:				rs.b	1
 O2:				rs.b	1
@@ -99,19 +97,19 @@ H2:				rs.b	1
 E2:				rs.b	1
 R2:				rs.b	1
 S1:				rs.b	1
-X_MARK1:		rs.b	1
+X_MARK1:			rs.b	1
 
 
 ;#############################################
 ;#				  MACROS					 #
 ;#############################################
 							
-DMA:	macro				      ; \1 - mode
+DMA:	macro				; \1 - mode
 	movem.l D5/A5,-(SP)		; \2 - source address
-	lea DMASOURCE,A5		  ; \3 - length
-	move.w \2,D5			    ; \4 - destination address
+	lea DMASOURCE,A5		; \3 - length
+	move.w \2,D5			; \4 - destination address
 	lsr.l #1,D5
-	movep.l D5,-1(A5)			
+	movep.l D5,-1(A5)		; i'll make a subroutine of it sometime	
 	move.w \3,D5
 	lsr.l #1,D5
 	movep.w D5,7(A5)
@@ -127,9 +125,9 @@ DMA:	macro				      ; \1 - mode
 	movem.l (SP)+,D5/A5
 	endm
 	
-SCREEN:		 macro						            ; \1 - name table
+SCREEN:		 macro				  ; \1 - name table
 	VDP VRAM_WRITE,\1+(\2*2)+(\3*128),0	  ; \2 - X pos (1-40)
-	endm								                  ; \3 - Y pos (1-28)
+	endm					  ; \3 - Y pos (1-28)
 		
 ; \1 - tile number
 ; \2 - X pos (to 1023)
@@ -160,18 +158,12 @@ VBLANK:			macro
 	move.l (SP)+,D5
 	endm
 
-VDP:			macro																			                                          ; \1 - mode
+VDP:			macro										; \1 - mode									                                          ; \1 - mode
 	move.l #(((\1)&3)<<$1E+((\1)&$C)<<$2+((\2)&$C000)>>$E+((\2)&$3FFF)<<$10)+\3*$80,(VDP_CTRL)	; \2 - address
 	endm							
-	
-; +++++++++++++++++++++++++++++++++++++++++++++
-;+#############################################+
-;+# 			START OF THE PROGRAM		  #+
-;+#############################################+
-; +++++++++++++++++++++++++++++++++++++++++++++
 
 ;#############################################
-;# 		  TMSS & VDP INITIALIZATION		     #
+;# 	 TMSS & VDP INITIALIZATION	     #
 ;#############################################
 
 START:
@@ -206,7 +198,7 @@ DMA_Regs:
 	dbra D7,DMA_Regs
 	
 ;#############################################
-;# 				 MAIN CODE 					 #
+;# 		 MAIN CODE 		     #
 ;#############################################
 ;
 	lea Palette1,A0
@@ -293,7 +285,7 @@ SLOWDOWN:
 	
 ;---------------------------------------	
 	
-	;	D6 - character phase value	
+	;   D6 - character phase value	
 	;   D4 - final coordinate
 Coord_calc:
 	move.l		D6,D0
@@ -365,12 +357,12 @@ Power2:
 	
 ; +++++++++++++++++++++++++++++++++++++++++++++
 ;+#############################################+
-;+# 				DATA					  #+
+;+# 		    DATA		      #+
 ;+#############################################+
 ; +++++++++++++++++++++++++++++++++++++++++++++
 
 ;#############################################
-;# 				  PALETTES 					 #
+;# 		  PALETTES                   #
 ;#############################################
 
 Palette1:
@@ -379,7 +371,7 @@ Palette1:
 	dc.w $006
 
 ;#############################################
-;# 				   TILES 					 #
+;# 		   TILES 		     #
 ;#############################################
 
 Letters:
@@ -497,7 +489,7 @@ Letters_END:
 	even
 
 ;#############################################
-;# 				VDP SETTINGS				 #
+;# 		VDP SETTINGS		     #
 ;#############################################
 
 VDP_Default_Settings

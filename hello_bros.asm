@@ -107,9 +107,9 @@ set_dma_address:
 	lea     letterRecords(PC), A1
 	lea		(letterRecordsRam).l, A3
 	moveq	#(letterRecordsEnd - letterRecords - 1), D7
-create_letterRecordsRam:	
+create_letters:	
 	move.b  (A1)+, (A3)+
-	dbf		D7, create_letterRecordsRam
+	dbf		D7, create_letters
 
 	
 	move.w	#$200, D0
@@ -125,7 +125,7 @@ main_loop:
 	lea		(letterRecordsRam).l, A1
 	moveq	#(letterRecordsEnd - letterRecords - 1) >> 2, D7
 .regenerate_sprites:	
-	move.l	(A1), D1 	; Get the next four letterRecordsRam
+	move.l	(A1), D1 	; Get the next four letters
 	moveq	#4 - 1, D6
 .next:
 	rol.l	#8, D1		; Move on to the next letter
@@ -143,7 +143,7 @@ main_loop:
 	dbf 	D6, .next
 
 	move.l	D1, (A1)	; Save letter statuses
-	lea  	4(A1), A1	; Move on to the next 4 letterRecordsRam
+	lea  	4(A1), A1	; Move on to the next 4 letters
 	dbf		D7, .regenerate_sprites
 	
 	move.l	#15000, D7

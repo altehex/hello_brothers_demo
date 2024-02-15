@@ -156,8 +156,16 @@ main_loop:
 change_color:
 	add.w	D0, D2
 	add.l	#$20000000, D2
-	bcc.s	.done
+	bcs.s	update_d0:
 
+	VDP_ADDRESS_TO_REG	$02, TYPE_CRAM, WRITE, A2
+	move.w	D2, VDP_DATA - VDP_CONTROL(A2)
+	VDP_ADDRESS_TO_REG	SPRITE_TABLE, TYPE_VRAM, WRITE, A2
+
+handler:
+	rte
+
+update_d0:
 	sub.w	D0, D2
 	neg.w	D0
 	asr.w	#4, D0
@@ -172,13 +180,6 @@ change_color:
 
 	move.w	#-$200, D0
 	bra.s	change_color
-	
-.done:
-	VDP_ADDRESS_TO_REG	$02, TYPE_CRAM, WRITE, A2
-	move.w	D2, VDP_DATA - VDP_CONTROL(A2)
-	VDP_ADDRESS_TO_REG	SPRITE_TABLE, TYPE_VRAM, WRITE, A2
-handler:
-	rte
 	
 	
 vdpValues:

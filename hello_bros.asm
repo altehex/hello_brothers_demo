@@ -61,7 +61,7 @@ endm
 	dc.b		"HELLO                                           "
 	dc.b		"HELLO                                           "
 	dc.b		"GM 00000000-02"
-	dc.w		$446E
+	dc.w		$4530
 	dc.b		"J               "
 	dc.l		$000000, $1FFFFF
 	dc.l		$FF0000, $FFFFFF
